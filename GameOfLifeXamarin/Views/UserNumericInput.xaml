@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:common="clr-namespace:GameOfLifeXamarin.Common;assembly=GameOfLifeXamarin"
+             x:Class="GameOfLifeXamarin.Views.UserNumericInput"
+             x:Name="UserNumericInputView">
+  <ContentView.Content>
+      <StackLayout Orientation="Horizontal">
+            <Label FontSize="Large" VerticalOptions="Center" Text="{Binding Source={x:Reference UserNumericInputView},Path=Name }"></Label>
+          <Entry Keyboard="Numeric"
+                 Text="{Binding Source={x:Reference UserNumericInputView},Path=Value, Mode=TwoWay }"
+                 HorizontalOptions="FillAndExpand">
+              <Entry.Behaviors>
+                  <common:NumericValidationBehavior />
+              </Entry.Behaviors>
+          </Entry>
+      </StackLayout>
+    </ContentView.Content>
+</ContentView>

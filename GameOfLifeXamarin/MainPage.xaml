@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:GameOfLifeXamarin.Converters;assembly=GameOfLifeXamarin"
+             xmlns:models="clr-namespace:GameOfLifeXamarin.Models;assembly=GameOfLifeXamarin"
+             xmlns:common="clr-namespace:GameOfLifeXamarin.Common;assembly=GameOfLifeXamarin"
+             xmlns:views="clr-namespace:GameOfLifeXamarin.Views;assembly=GameOfLifeXamarin"
+
+             x:Class="GameOfLifeXamarin.MainPage"
+             x:Name="MainPageName">
+    <ContentPage.Resources>
+        <converters:StatusToBrushConverter x:Key="StatusToBrushConverter" />
+        <converters:StatusToStringConverter x:Key="StatusToStringConverter" />
+        <Style x:Key="buttonStyle" TargetType="Button">
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="CenterAndExpand" />
+            <Setter Property="BorderColor" Value="Black" />
+            <Setter Property="BorderRadius" Value="5" />
+            <Setter Property="BorderWidth" Value="5" />
+            <Setter Property="WidthRequest" Value="100" />
+            <Setter Property="TextColor" Value="Teal" />
+        </Style>
+    </ContentPage.Resources>
+    <StackLayout>
+        <!-- <Grid x:Name="BoardGrid"> -->
+        <!--     <CollectionView  x:Name="Board" ItemTemplate="{DynamicResource RowView}" ItemsSource="{Binding Source={x:Reference MainPageName}, Path=GameBoard.Fields}"></CollectionView> -->
+        <!-- </Grid> -->
+        <StackLayout x:Name="BeforeGameLayout">
+            <views:UserNumericInput Value="{Binding Source={x:Reference MainPageName}, Path=BoardWidth, Mode=TwoWay}"
+                                    Name="Width" />
+            <views:UserNumericInput Value="{Binding Source={x:Reference MainPageName}, Path=BoardHeight, Mode=TwoWay}"
+                                    Name="Height" />
+            <Button Text="Start" Style="{StaticResource buttonStyle}" Clicked="Start" />
+        </StackLayout>
+        <StackLayout x:Name="GameLayout" IsVisible="False">
+
+            <StackLayout x:Name="BoardView" Orientation="Vertical" Spacing="-6" Padding="0">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout x:Name="BoardView" Orientation="Horizontal" BindableLayout.ItemsSource="{Binding}" Spacing="0" Padding="0">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="{x:Type models:Field}">
+                                    <Rectangle
+                                        Fill="{Binding Path=FieldStatus, Converter={StaticResource StatusToBrushConverter}}"
+                                        Stroke="Black"
+                                        WidthRequest="{Binding Source={x:Reference MainPageName}, Path=WidthCellSize}"
+                                        HeightRequest="{Binding Source={x:Reference MainPageName}, Path=HeightCellSize}"
+                                        Margin="0"
+                                    >
+                                        <Rectangle.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={x:Reference MainPageName}, Path=ChangeStatusCommand}"
+                                                CommandParameter="{Binding}"
+                                                NumberOfTapsRequired="2" />
+                                        </Rectangle.GestureRecognizers>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+            <StackLayout x:Name="ButtonsGrid">
+                <StackLayout Margin="10" Orientation="Horizontal">
+                    <Button Text="Next Turn" Style="{StaticResource buttonStyle}" Clicked="NextTurn" />
+                    <Button Text="Previous Turn" Style="{StaticResource buttonStyle}" Clicked="PreviousTurn" />
+                    <Switch IsToggled="{Binding Source={x:Reference MainPageName}, Path=Advanced}"/>
+                    <Label VerticalOptions="Center">Advanced</Label>
+                </StackLayout>
+                <StackLayout Margin="10" Orientation="Horizontal">
+                    <Button Text="Repeat 'Next Turn'" Style="{StaticResource buttonStyle}" Clicked="NextTurnAdvanced" />
+                    <Button Text="Repeat 'Previous Turn'" Style="{StaticResource buttonStyle}" Clicked="PreviousTurnAdvanced" />
+                </StackLayout>
+                <StackLayout Margin="10" Orientation="Horizontal">
+                    <Button Text="Save" Style="{StaticResource buttonStyle}" Clicked="Save" />
+                    <Button Text="Load" Style="{StaticResource buttonStyle}" Clicked="Load" />
+                </StackLayout>
+            </StackLayout>
+            <StackLayout x:Name="ButtonsRepeatModeGrid" IsVisible="False">
+                <StackLayout Margin="10" Orientation="Horizontal">
+                    <Button Text="Stop Repeat" Style="{StaticResource buttonStyle}" Clicked="Stop" />
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>
